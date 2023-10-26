@@ -18,7 +18,7 @@ jobs:
     name: upload release to PyPI
     runs-on: ubuntu-latest
     environment:
-      name: pypi
+      name: release
       url: https://pypi.org/p/chittorgarh_client
     permissions:
       id-token: write
