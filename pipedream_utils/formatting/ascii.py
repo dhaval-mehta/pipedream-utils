@@ -3,29 +3,51 @@ from typing import Dict
 import prettytable as prettytable
 
 
-def create_key_value_table(data, column_config: Dict):
+def create_key_value_table(data, data_config: Dict, title_config: Dict = None, footer: bool = False):
+    if title_config is None:
+        title_config = {
+            'key': {
+                'title': 'Event',
+                'max_width': 10,
+            },
+            'value': {
+                'title': 'Details',
+                'max_width': 10,
+            }
+        }
+
+    table = prettytable.PrettyTable([item['title'] for item in title_config.values()])
+    table._max_width = {item['title']: item['max_width'] for item in title_config.values()}
+
+    for attr, config in data_config.items():
+        key = config['display_name']
+        value = config['formatter'](getattr(data, attr))
+        table.add_row((key, value))
+
+    table = table.get_string()
+
+    if footer:
+        table = with_table_footer(table)
+
+    return table
+
+
+def create_key_value_tables(data, data_config: Dict, title_config: Dict = None, footer: bool = False):
     tables = []
 
     for row in data:
-        table = prettytable.PrettyTable(['Event', 'Details'])
-        table._max_width = {"Event": 10, "Details": 10}
-        for column, config in column_config.items():
-            key = config['display_name']
-            value = config['formatter'](getattr(row, column))
-            table.add_row((key, value))
-
-        table = table.get_string()
+        table = create_key_value_table(row, data_config, title_config, footer)
         tables.append(table)
 
     return '\n\n'.join(tables)
 
 
-def with_table_footer(table):
-    list_of_table_lines = table.get_string().split('\n')
+def with_table_footer(table: str):
+    list_of_table_lines = table.split('\n')
     horizontal_line = list_of_table_lines[0]
     result_lines = 1
     msg = "\n".join(list_of_table_lines[:-(result_lines + 1)])
-    msg += f'{horizontal_line}\n'
+    msg += f'\n{horizontal_line}\n'
     msg += "\n".join(list_of_table_lines[-(result_lines + 1):])
     return msg
 
