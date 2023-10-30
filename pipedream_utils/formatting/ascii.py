@@ -14,6 +14,13 @@ default_title_config = {
 }
 
 
+def _get_value(data, key):
+    if type(data) == dict:
+        return data[key]
+
+    return getattr(data, key)
+
+
 def create_key_value_table(data, data_config: Dict, title_config: Dict = None, footer: bool = False):
     if title_config is None:
         title_config = default_title_config
@@ -26,7 +33,7 @@ def create_key_value_table(data, data_config: Dict, title_config: Dict = None, f
 
     for attr, config in data_config.items():
         key = config['display_name']
-        value = config['formatter'](getattr(data, attr))
+        value = config['formatter'](_get_value(data, attr))
         table.add_row((key, value))
 
     table = table.get_string()
@@ -35,16 +42,6 @@ def create_key_value_table(data, data_config: Dict, title_config: Dict = None, f
         table = with_table_footer(table)
 
     return table
-
-
-def create_key_value_table_from_dict(data: Dict, data_config: Dict, title_config: Dict = None, footer: bool = False):
-    class dummy:
-        def __init__(self):
-            super().__init__()
-            for k, v in data.items():
-                self.__setattr__(k, v)
-
-    return create_key_value_table(dummy(), data_config, title_config, footer)
 
 
 def create_key_value_tables(data, data_config: Dict, title_config: Dict = None, footer: bool = False):
