@@ -1,20 +1,22 @@
-from typing import Dict
+from typing import Dict, List
 
 import prettytable as prettytable
+
+default_title_config = {
+    'key': {
+        'title': 'Event',
+        'max_width': 10,
+    },
+    'value': {
+        'title': 'Details',
+        'max_width': 10,
+    }
+}
 
 
 def create_key_value_table(data, data_config: Dict, title_config: Dict = None, footer: bool = False):
     if title_config is None:
-        title_config = {
-            'key': {
-                'title': 'Event',
-                'max_width': 10,
-            },
-            'value': {
-                'title': 'Details',
-                'max_width': 10,
-            }
-        }
+        title_config = default_title_config
 
     table = prettytable.PrettyTable([item['title'] for item in title_config.values()])
     table._max_width = {item['title']: item['max_width'] for item in title_config.values()}
@@ -30,6 +32,16 @@ def create_key_value_table(data, data_config: Dict, title_config: Dict = None, f
         table = with_table_footer(table)
 
     return table
+
+
+def create_key_value_table_from_dict(data: Dict, data_config: Dict, title_config: Dict = None, footer: bool = False):
+    class dummy:
+        def __init__(self):
+            super().__init__()
+            for k, v in data.items():
+                self.__setattr__(k, v)
+
+    return create_key_value_table(dummy(), data_config, title_config, footer)
 
 
 def create_key_value_tables(data, data_config: Dict, title_config: Dict = None, footer: bool = False):
