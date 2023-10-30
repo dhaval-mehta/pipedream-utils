@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict
 
 import prettytable as prettytable
 
@@ -20,6 +20,9 @@ def create_key_value_table(data, data_config: Dict, title_config: Dict = None, f
 
     table = prettytable.PrettyTable([item['title'] for item in title_config.values()])
     table._max_width = {item['title']: item['max_width'] for item in title_config.values()}
+
+    for item in title_config.values():
+        table.align[item['title']] = item.get('align', 'c')
 
     for attr, config in data_config.items():
         key = config['display_name']
