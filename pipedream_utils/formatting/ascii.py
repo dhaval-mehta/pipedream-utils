@@ -68,6 +68,10 @@ def default_formatter(x):
     return x
 
 
+def float_formatter(x):
+    return "{0:.2f}".format(x)
+
+
 def date_formatter(x):
     try:
         return x.strftime('%d %b')
