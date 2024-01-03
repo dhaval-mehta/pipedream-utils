@@ -34,6 +34,8 @@ def create_key_value_table(data, data_config: Dict, title_config: Dict = None, f
     for attr, config in data_config.items():
         key = config['display_name']
         value = config['formatter'](_get_value(data, attr))
+        if not key and not value:
+            continue
         table.add_row((key, value))
 
     table = table.get_string()
