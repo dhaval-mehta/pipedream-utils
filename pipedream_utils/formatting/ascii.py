@@ -21,7 +21,7 @@ def _get_value(data, key):
     return getattr(data, key)
 
 
-def create_key_value_table(data, data_config: Dict, title_config: Dict = None, footer: bool = False):
+def create_key_value_table(data, data_config: Dict, title_config: Dict = None, header=True, footer: bool = False):
     if title_config is None:
         title_config = default_title_config
 
@@ -38,7 +38,7 @@ def create_key_value_table(data, data_config: Dict, title_config: Dict = None, f
             continue
         table.add_row((key, value))
 
-    table = table.get_string()
+    table = table.get_string(header=header)
 
     if footer:
         table = with_table_footer(table)
