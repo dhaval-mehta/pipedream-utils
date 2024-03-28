@@ -79,3 +79,13 @@ def date_formatter(x):
         return x.strftime('%d %b')
     except AttributeError:
         return x
+
+
+def add_title_in_pretty_table(table: str, title: str):
+    top_border = table[:table.index('\n')]
+    l = len(top_border)
+    padding = l - len(title) - 2
+    p1 = int(padding / 2)
+    p2 = padding - p1
+    title = '|' + ' ' * p1 + title + ' ' * p2 + '|'
+    return '\n'.join([top_border, title, table])
