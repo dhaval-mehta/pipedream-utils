@@ -82,10 +82,11 @@ def date_formatter(x):
 
 
 def add_title_in_pretty_table(table: str, title: str):
-    top_border = table[:table.index('\n')]
+    top_border, table = table.split('\n', 1)
     l = len(top_border)
+    top_border = f'+{"-" * (l - 2)}+'
     padding = l - len(title) - 2
     p1 = int(padding / 2)
     p2 = padding - p1
     title = '|' + ' ' * p1 + title + ' ' * p2 + '|'
-    return '\n'.join([top_border, title, table])
+    return '\n'.join([top_border, title, top_border, table])
